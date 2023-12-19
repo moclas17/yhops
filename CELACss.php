@@ -1,0 +1,8 @@
+	<!-- start: CSS -->
+	<?php
+		$ConsultaTema = "select Ruta from CelaTema, CelaConfiguraci_on where CelaTema.idCelaTema = CelaConfiguraci_on.Valor and CelaConfiguraci_on.Nombre = 'CelaTema' ";
+		$ResultadoTema = $Conexion->query ($ConsultaTema);
+		$RenglonTema = $ResultadoTema->fetch_row();
+		$Tema = ( strlen($RenglonTema[0])  > 0)  ? $RenglonTema[0]:"bootstrap/css/bootstrap.min.css";
+	?>
+		<link id="bootstrap-style" href="<?php print  $Tema; ?>" rel="stylesheet">		<link rel="stylesheet" type="text/css" href="bootstrap/css/dashboard.css">		<link rel="stylesheet" type="text/css" href="bootstrap/css/dataTables.bootstrap.css">		<link id="JQueryUI" href="bootstrap/css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">		<link id="chardin" href="bootstrap/css/chardinjs.css" rel="stylesheet">		<link id="jquery_ui" href="bootstrap/css/jquery-ui.css" rel="stylesheet">		<link id="font" href="bootstrap/font/css/font-awesome.css" rel="stylesheet">				<link id="styles" href="bootstrap/css/CELAStyles.css" rel="stylesheet">		<link id="scrollbar" href="bootstrap/scrollbar/perfect-scrollbar-0.4.10.min.css" rel="stylesheet">		<!--[if lt IE 9]>			<script src="../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->		<!--[if lt IE 9]>			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>			<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>		<![endif]-->

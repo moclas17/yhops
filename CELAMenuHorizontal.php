@@ -1,0 +1,49 @@
+<?php
+/*** Empresa: 3e de mexico SA de CV* Programador: Eumir Esteban Salgado Lampart/Vazquez Arellanes Mijail.* Fecha: 22/11/2013* Descripción: Version 3.0 de menu Horizontal. * Comentarios: Genera un menú Horizontal y el encabezado a partir de una serie de formularios registrados * en la base de datos.**/$consultaMenu="SELECT m.Etiqueta as MenuEtiqueta, m.idMenu as idMenu, m.Referencia as ReferenciaMenu, m.Categor_ia as MenuCategoria, i.NombreDelIcono as MenuIcono, m.Descripci_on as MenuDescripcion, m.Prioridad as MenuPrioridad, m.TipoDeElemento as MenuTipo, mc.Etiqueta as CategoriaEtiqueta, (select NombreDelIcono from CelaIcono where CelaIcono.idIcono=mc.Icono ) as CategoriaIcono, mc.Descripci_on as CategoriaDescripcion, mc.Prioridad as CategoriaPrioridad, mc.Referencia as CategoriaReferencia FROM CelaMen_u m INNER JOIN CelaMen_u mc ON (m.Categor_ia = mc.idMenu) INNER JOIN CelaIcono i ON (m.Icono=i.idIcono) WHERE m.idMenu IN (select Elemento from CelaPrivilegios where RolDeUsuario=".(isset($_SESSION['CELA_CveRol'.$_SESSION['CELA_Aleatorio']])?$_SESSION['CELA_CveRol'.$_SESSION['CELA_Aleatorio']]:'')." AND Tabla=1) AND m.TipoDeElemento IN (1,3) AND m.Orientaci_on=2 ORDER BY mc.Prioridad, m.Prioridad";$resultadoMenu=$Conexion->query($consultaMenu);$registrosMenu=$resultadoMenu->num_rows;
+?>
+<!-- start: Header Menú Horizontal-->
+		<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">					<a id="toggle-min" class="toggle-min navbar-brand" href="#">						<i class="fa fa-bars"></i>					</a>					<div class="logo" >						<a href="Escritorio.php" class="navbar-brand">						<?php							print (isset($_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']])? $_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']]:strtoupper(ObtenValor("SELECT Valor FROM CelaConfiguraci_on WHERE Nombre='NombreSistema'","Valor")));						?>						</a>					</div>					<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">						<span class="sr-only">Toggle navigation</span>						<span class="icon-bar"></span>						<span class="icon-bar"></span>						<span class="icon-bar"></span>					</button>				</div>				<div class="navbar-collapse collapse">					<ul class="nav navbar-nav navbar-right" data-intro="Men&uacute; horizontal" data-position="left">		<?php			$categoriaDeMenu='';			$contadorCategoria=0;			$registroMenu=$resultadoMenu->fetch_assoc();			if($registrosMenu>0){				do{					if($registroMenu['MenuTipo']!=3){		?>						<li class="dropdown">							<a href="<?php print $registroMenu['CategoriaReferencia']; ?>" class="dropdown-toggle"  id="drop_<?php print $contadorCategoria; ?>" data-toggle="dropdown" data-hover="dropdown" data-close-others="false" data-delay="0" title="<?php print $registroMenu['CategoriaDescripcion']; ?>">								<strong>									<i class="<?php print $registroMenu['CategoriaIcono']; ?>"></i>&nbsp;									<span class="hidden-phone hidden-tablet"><?php print $registroMenu['CategoriaEtiqueta']; ?></span>&nbsp;									<span class="caret"></span>								</strong>							</a>				<?php					if($registroMenu['CategoriaEtiqueta']!=$registroMenu['MenuEtiqueta'] && $registroMenu['CategoriaReferencia']!=$registroMenu['ReferenciaMenu']){						$categoriaDeMenu=$registroMenu['MenuCategoria'];				?>							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu<?php print $contadorCategoria; ?>">				<?php						do{							if($registroMenu['MenuTipo']==3){				?>								<li role="presentation" class="divider"></li>				<?php							}
+							else{
+								if($registroMenu['MenuTipo']==1) {
+				?>
+								<li role="presentation" >
+									<a role="menuitem" tabindex="-1" href="<?php print $registroMenu['ReferenciaMenu']; ?>" title="<?php print $registroMenu['MenuDescripcion']; ?>" data-placement="bottom">
+									<i class="<?php print $registroMenu['MenuIcono']; ?>"></i>&nbsp;
+									<?php print $registroMenu['MenuEtiqueta']; ?>
+									</a>
+								</li>				
+				<?php
+								}
+							}
+							$registroMenu=$resultadoMenu->fetch_assoc();
+							$contadorCategoria++;
+						}while($categoriaDeMenu==$registroMenu['MenuCategoria']);
+				?>							</ul>				<?php					}
+					else{
+						$registroMenu=$resultadoMenu->fetch_assoc();
+						$contadorCategoria++;
+					}
+				?>
+						</li>
+		<?php					}
+					else{						$registroMenu=$resultadoMenu->fetch_assoc();						$contadorCategoria++;					}				}while($contadorCategoria<$registrosMenu);			}		?>							<li class="dropdown">							<a href="#" class="dropdown-toggle" id="drop_system" data-toggle="dropdown" data-hover="dropdown" data-close-others="false" data-delay="0" title="Opciones de usuario" data-placement="left">								<strong>									<i class="fa fa-user"></i>&nbsp;									<span class="hidden-phone hidden-tablet">User</span>&nbsp;									<span class="caret"></span>								</strong>							</a>							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu<?php print $contadorCategoria; ?>">								<li role="presentation" class="divider"></li>								<li role="presentation" >									<a role="menuitem" tabindex="-1" href="Salir.php" title="Salir del sistema" data-placement="bottom">										<i class="fa fa-power-off"></i>&nbsp;&nbsp;										Salir									</a>								</li>							</ul>						</li>							</ul>				</div>			</div>		</div>	
+		<!-- Modal Acerca De -->		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">			<div class="modal-dialog">				<div class="modal-content">					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>						<h3 class="modal-title" id="myModalLabel">						<?php							print isset($_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']])? $_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']]:strtoupper(ObtenValor("SELECT Valor FROM CelaConfiguraci_on WHERE Nombre='NombreSistema'","Valor"));						?>						</h3>					</div>					<div class="modal-body">						<div class="row">							<div id="content" class="col-md-12">								<div class="row fluid-sortable">									<div class="box col-md-5">										<div class="box-content">											<br /><br /><br />											<img src="bootstrap/img/3EMexico.jpg" class="img-responsive"/>											<br /><br /><br /><br />										</div>									</div>									<div class="box col-md-7">										<div class="box-content" align="center">											<p>												<strong>													Licencia autorizada a: <?php print isset($_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']])? $_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']]:strtoupper(ObtenValor("SELECT Valor FROM CelaConfiguraci_on WHERE Nombre='NombreSistema'","Valor")); ?>												</strong>											</p><br />											<p>											<?php												print isset($_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']])? $_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']]:strtoupper(ObtenValor("SELECT Valor FROM CelaConfiguraci_on WHERE Nombre='NombreSistema'","Valor"));
+											?> 												v1.0<br />PHP Version <?php print phpversion(); ?>											</p><br />											<p>												<a href="http://3emexico.com/" target="_blank">http://3emexico.com/</a>											</p>											<p>												&copy; &nbsp; Copyright&nbsp; 3EM&eacute;xico &nbsp; <?php echo date('Y'); ?>											</p>										</div>									</div>								</div>							</div>						</div>					</div>					<div class="modal-footer">						<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>					</div>				</div><!-- /.modal-content -->			</div><!-- /.modal-dialog -->		</div><!-- /.modal --><?php	if(isset($_SESSION['CELA_CveUsuario'.$_SESSION['CELA_Aleatorio']])){?>		<!-- Modal Bloqueo -->		<div class="modal fade bs-example-modal-sm" id="LockModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">			<div class="modal-dialog modal-sm">				<div class="modal-content">					<div class="modal-header">						<h3 class="modal-title" id="myModalLabel">						<?php							print isset($_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']])? $_SESSION['CELA_NombreSistema'.$_SESSION['CELA_Aleatorio']]:strtoupper(ObtenValor("SELECT Valor FROM CelaConfiguraci_on WHERE Nombre='NombreSistema'","Valor"));
+						?>						</h3>					</div>					<div class="modal-body text-center">						
+							<img class="img-circle" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100"
+							<br />
+							<h4><span class="label label-primary"><?php print "Usuario: ".$_SESSION['CELA_Usuario'.$_SESSION['CELA_Aleatorio']]; ?></span></h4>
+							<br />
+							<input type="password" class="form-control" name="txtcontrasena" id="txtcontrasena" type="password" autocomplete="off" placeholder="Contrase&ntilde;a" /><br />
+							<label class="label error" id="Message" style="font-size: 12pt;" ></label>
+							<hr />
+							<span class="clear-fix"></span>
+							<button class="btn btn-lg btn-primary btn-block" id="UnLock" name="UnLock">Desbloquear</button>
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->		</div><!-- /.modal --><?php	}?>
