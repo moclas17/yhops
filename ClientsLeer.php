@@ -6,7 +6,7 @@ $Tabla['table']="CelaUsuario";
 $Tabla['columns']="''/*/ NombreCompleto/*/ slogan /*/ logo /*/ PIN ";
 $Tabla['index']="idUsuario";
 $Tabla['condition']=" EstadoActual=1 AND Rol=4";
-$Tabla['extra'][0]="actions";
+$Tabla['extra'][0]="actions_clients";
 $Tabla['Privileges']=$Privilegios;
 $Datos=Encrypt(json_encode($Tabla),$_SESSION['CELA_Aleatorio']);
 $ConsultaLog = sprintf("INSERT INTO CelaAccesos ( idAcceso, FechaDeAcceso, idUsuario, Tabla, IdTabla, Acci_on ) VALUES ( %s, %s, %s, %s, %s, %s)",
@@ -80,7 +80,7 @@ $ResultadoLog=$Conexion->query($ConsultaLog);
 							    ?>
 										<a data-intro="Insertar nuevo CelaUsuario" data-position="top" class="btn btn btn-success" title="Agregar" href="ClientsCrear.php" >
 											<i class="fa fa-plus"></i>&nbsp;
-											<span>Agregar</span>
+											<span>Add</span>
 										</a>
 							    <?php
 								    }
@@ -116,9 +116,9 @@ $ResultadoLog=$Conexion->query($ConsultaLog);
 									</div>
 									<div class="col-md-4 text-right">
 										<div class="form-group" data-intro="Busqueda general" data-position="bottom" >
-											<label class="sr-only" for="Search-CelaUsuario">Busqueda</label>
+											<label class="sr-only" for="Search-CelaUsuario">Search</label>
 											<div>
-												<input id="Search-CelaUsuario" class="form-control DataTableFilter" type="text" placeholder="Buscar..." autocomplete="off">
+												<input id="Search-CelaUsuario" class="form-control DataTableFilter" type="text" placeholder="Search..." autocomplete="off">
 											</div>
 										</div>
 									</div>
@@ -128,7 +128,7 @@ $ResultadoLog=$Conexion->query($ConsultaLog);
 										<thead>
 											<tr>
 												<th width="1%" title="Seleccionar todo"><div align="center"><label><input  type="checkbox" id="All" data-intro="Seleeciona todos los registros de esta p&aacute;gina" data-position="bottom"/></label></div></th>
-												<th class="sortable" width="30%"><div align="center"> Nombre Completo</div></th>
+												<th class="sortable" width="30%"><div align="center"> Username</div></th>
 												<th class="sortable" width="25%"><div align="center"> Slogan</div></th>
 												<th class="sortable" width="25%"><div align="center"> Logo</div></th>
 												<th class="sortable" width="9%"><div align="center"> PIN</div></th>
@@ -164,9 +164,7 @@ $ResultadoLog=$Conexion->query($ConsultaLog);
 						<?php
 							}
 						?>
-							<div class="panel-footer text-right">
-								<a class="btn btn-danger" href="<?php print substr($_SERVER['HTTP_REFERER'],strripos($_SERVER['HTTP_REFERER'],"/")+1,strlen($_SERVER['HTTP_REFERER'])); ?>" title="ir atr&aacute;s"  data-intro="Regresa al formulario anterior" data-position="left"><i class="fa fa-arrow-left"></i>&nbsp; ir atr&aacute;s</a>
-							</div>
+							
 						</div>
 						</div>
 					</div>

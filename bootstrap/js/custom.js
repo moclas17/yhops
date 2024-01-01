@@ -150,19 +150,19 @@ $(function(){
 			"sPaginationType": "bootstrap",
 			"iDisplayLength" : 20,
 			"oLanguage": {
-				"sZeroRecords": "No se encontrarón registros",
-				"sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-				"sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
-				"sInfoFiltered": "(filtrado de _MAX_ registros totales)",
-				"sEmptyTable":"No se encontrarón registros",
-				"sLoadingRecords":"Cargando...",
-				"sProcessing":"<strong>Procesando . . .</strong>",
-				"sSearch":"Buscar:&nbsp;",
+				"sZeroRecords": "No records founded",
+				"sInfo": "Mostrando _START_ a _END_ de _TOTAL_ records",
+				"sInfoEmpty": "Show 0 a 0 de 0 records",
+				"sInfoFiltered": "(filtered  _MAX_ records)",
+				"sEmptyTable":"No data available",
+				"sLoadingRecords":"Loading...",
+				"sProcessing":"<strong>Processing . . .</strong>",
+				"sSearch":"Search:&nbsp;",
 				"oPaginate":{
-					"sFirst":"Primero",
-					"sLast":"Ultimo",
-					"sNext":"Sig. Pag.",
-					"sPrevious":"Pag. Ant."
+					"sFirst":"First",
+					"sLast":"Last",
+					"sNext":"Next",
+					"sPrevious":"Prev"
 				}
 			},
 			"aoColumns": sorting,
@@ -173,19 +173,19 @@ $(function(){
 				"sPaginationType": "bootstrap",
 				"iDisplayLength" : 20,
 				"oLanguage": {
-					"sZeroRecords": "No se encontrarón registros",
-					"sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-					"sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
-					"sInfoFiltered": "(filtrado de _MAX_ registros totales)",
-					"sEmptyTable":"No se encontrarón registros",
-					"sLoadingRecords":"Cargando...",
-					"sProcessing":"<strong>Procesando . . .</strong>",
-					"sSearch":"Buscar:&nbsp;",
+					"sZeroRecords": "No records founded",
+					"sInfo": "Mostrando _START_ a _END_ de _TOTAL_ records",
+					"sInfoEmpty": "Show 0 a 0 de 0 records",
+					"sInfoFiltered": "(filtered  _MAX_ records)",
+					"sEmptyTable":"No data available",
+					"sLoadingRecords":"Loading...",
+					"sProcessing":"<strong>Processing . . .</strong>",
+					"sSearch":"Search:&nbsp;",
 					"oPaginate":{
-						"sFirst":"Primero",
-						"sLast":"Ultimo",
-						"sNext":"Sig. Pag.",
-						"sPrevious":"Pag. Ant."
+						"sFirst":"First",
+						"sLast":"Last",
+						"sNext":"Next",
+						"sPrevious":"Prev"
 					}
 				},
 				"aoColumns": sorting,

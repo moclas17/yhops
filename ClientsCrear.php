@@ -7,14 +7,26 @@ if (isset($_SERVER['QUERY_STRING'])) {
 	$FormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 if ((isset($_POST["CelaUsuarioInsert"])) && ($_POST["CelaUsuarioInsert"] == "CelaUsuarioInsert")) {
-	$ConsultaInserta = sprintf("INSERT INTO CelaUsuario (  idUsuario,NombreCompleto,Usuario,Contrase_na,CorreoElectr_onico,EstadoActual,Rol ) VALUES (  %s, %s, %s, %s, %s, %s, %s)", 
+	
+	if(!file_exists("repositorio/configuracion/")){
+		mkdir("repositorio/logos/", 0755, true);
+	}		
+	$ruta ="repositorio/logos/".$_FILES['logo']['name']."";
+	move_uploaded_file($_FILES['logo']['tmp_name'],"".$ruta);
+	
+	$ConsultaInserta = sprintf("INSERT INTO CelaUsuario (  idUsuario, NombreCompleto, Usuario, PIN, EstadoActual, Rol, idUserOwner, Contrase_na, CorreoElectr_onico, slogan, logo )
+									     VALUES (  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 		GetSQLValueString(NULL, "int"),
-		GetSQLValueString($_POST['NombreCompleto'], "varchar") ,
 		GetSQLValueString($_POST['Usuario'], "varchar") ,
-		GetSQLValueString(md5($_POST['Contrase_na']), "varchar") ,
-		GetSQLValueString($_POST['CorreoElectr_onico'], "varchar") ,
-		GetSQLValueString($_POST['EstadoActual'], "int") ,
-		GetSQLValueString($_POST['Rol'], "int")  );
+		GetSQLValueString($_POST['Usuario'], "varchar") ,		
+		GetSQLValueString($_POST['pin'], "varchar") ,
+		GetSQLValueString(1, "int") ,
+		GetSQLValueString(4, "int") ,
+		GetSQLValueString($_SESSION['CELA_CveUsuario'.$_SESSION['CELA_Aleatorio']], "int"),
+		GetSQLValueString($_POST['pin'], "varchar"),
+		GetSQLValueString($_POST['Usuario']."@mezcal.com", "varchar"),
+		GetSQLValueString($_POST['slogan'], "varchar"),
+		GetSQLValueString($ruta, "varchar")  );
 	if($ResultadoInserta = $Conexion->query($ConsultaInserta)){
 		$IdRegistroCelaUsuario = $Conexion->insert_id;
 		$ConsultaLog = sprintf("INSERT INTO CelaAccesos ( idAcceso, FechaDeAcceso, idUsuario, Tabla, IdTabla, Acci_on ) VALUES ( %s, %s, %s, %s, %s, %s)",
@@ -74,7 +86,7 @@ if ((isset($_POST["CelaUsuarioInsert"])) && ($_POST["CelaUsuarioInsert"] == "Cel
 						<?php
 							}else{
 						?>
-								<form class="form-horizontal form_validate" method="POST" name="CelaUsuario" id="CelaUsuario" action="<?php echo $FormAction; ?>" >
+								<form class="form-horizontal form_validate" method="POST" name="CelaUsuario" id="CelaUsuario" action="<?php echo $FormAction; ?>" enctype="multipart/form-data" >
 									<fieldset>
 										<span class="clearfix"></span>
 										<hr />
@@ -159,9 +171,7 @@ if ((isset($_POST["CelaUsuarioInsert"])) && ($_POST["CelaUsuarioInsert"] == "Cel
 					<?php
 						}
 					?>
-							<div class="panel-footer text-right">
-								<a class="btn btn-danger" href="<?php print substr($_SERVER['HTTP_REFERER'],strripos($_SERVER['HTTP_REFERER'],"/")+1,strlen($_SERVER['HTTP_REFERER'])); ?>" title="ir atr&aacute;s"  data-intro="Regresa al formulario anterior" data-position="left"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
-							</div>
+							
 						</div>
 						</div>
 					</div>

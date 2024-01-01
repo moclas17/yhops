@@ -1,5 +1,6 @@
 <?php
-
+include_once('../../../env.php');
+ //data required (Chain, wallet, privatekey, token)
 function GetSQLValueString($Value, $Type, $DefinedValue = "", $NotDefinedValue = ""){
 	$Value =  addslashes($Value) ;
 	switch($Type){
@@ -617,9 +618,7 @@ function create_colecction($privatekey,$apikey_tatum, $chain, $name, $symbol){
 	
 	if ($error) {
 	  echo "cURL Error #:" . $error;
-	} else {
-	  echo $response;
-	}
+	} 
 	return $response;
 }
 
@@ -642,11 +641,87 @@ function getdatafromtx( $apikey_tatum, $chain, $tx_hash){
 	
 	if ($error) {
 	  echo "cURL Error #:" . $error;
-	} else {
-	  echo $response;
-	}
+	} 
 	return $response;
 }
 
 
+function upload_image($files, $name){
+  
+  /** create curl file */
+	$cFile = curl_file_create($files['tmp_name'], $files['type'], $files['name']);
+  
+    /** metadata array */
+    $metadata = [
+	 'name' => $name,
+	 'keyvalues' => [],
+    ];
+  
+    /** post data array */
+    $post = array(
+	 'file' => $cFile,
+	 'pinataMetadata' => json_encode($metadata)
+    );
+  #precode($post,1,1);
+  /** header info pinata jwt authentication */
+  $headers = array();
+  $headers[] = 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1OGI1NTE1Mi1mNmZiLTQwZmEtOThkMS0zZGI4NmE1OGZjYzciLCJlbWFpbCI6Im1vY2xhczE3QGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImUzYmI2NjcyMjhhNWNmMTU5NDcwIiwic2NvcGVkS2V5U2VjcmV0IjoiYTc3ZjMxNTJkNTNiZTdhNDlmNDBjMjFlNTNiMDYwYWMzYjRhNzk2OGM3ZmM2OGIxZWRjNDRhNjFhMjUwNjkxMyIsImlhdCI6MTcwMzU2MjM5MX0.uscZ8z6-SOdgwzD2iUNrZLQJLzY7sOVUMyOESufO1VM';
+  
+  $url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+  
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  
+  $result = curl_exec($ch);
+  if (curl_errno($ch)) {
+    echo 'Error:' . curl_error($ch);
+  }
+  curl_close($ch);
+ # print_r($result); /** Found IPFS CID in here */
+  $myres=json_decode($result, 1);
+  return $myres['IpfsHash'];
+}
+
+
+
+function upload_json($name, $content){
+  
+  $curl = curl_init();
+  
+  curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "POST",
+    CURLOPT_POSTFIELDS => json_encode([
+	 'pinataContent' => $content,
+	 'pinataMetadata' => [
+		'name' => $name
+	 ]
+    ]),
+    CURLOPT_HTTPHEADER => [
+	 "accept: application/json",
+	 "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1OGI1NTE1Mi1mNmZiLTQwZmEtOThkMS0zZGI4NmE1OGZjYzciLCJlbWFpbCI6Im1vY2xhczE3QGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImUzYmI2NjcyMjhhNWNmMTU5NDcwIiwic2NvcGVkS2V5U2VjcmV0IjoiYTc3ZjMxNTJkNTNiZTdhNDlmNDBjMjFlNTNiMDYwYWMzYjRhNzk2OGM3ZmM2OGIxZWRjNDRhNjFhMjUwNjkxMyIsImlhdCI6MTcwMzU2MjM5MX0.uscZ8z6-SOdgwzD2iUNrZLQJLzY7sOVUMyOESufO1VM",
+	 "content-type: application/json"
+    ],
+  ]);
+  
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  
+  curl_close($curl);
+  
+  if ($err) {
+    echo "cURL Error #:" . $err;
+  } 
+  return $response;
+  
+}
 ?>
